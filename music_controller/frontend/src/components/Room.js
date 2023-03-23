@@ -13,7 +13,7 @@ export default class Room extends Component {
     }
 
     getRoomDetails(){
-        fetch('/api/get-room' + '/?code=' + this.roomCode)
+        fetch("/api/get-room" + "/?code=" + this.roomCode)
         .then((response) => response.json())
         .then((data) => {
             this.setState({
@@ -27,7 +27,7 @@ export default class Room extends Component {
 
     render() {
         return <div>
-            <h3>Room: {this.roomCode}</h3>
+            <h3>{this.roomCode}</h3>
             <p>Votes: {this.state.votesToSkip}</p>
             <p>Guest Can Pause: {this.state.guestCanPause.toString()}</p>
             <p>Is Host: {this.state.isHost.toString()}</p>
