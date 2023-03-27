@@ -12,19 +12,25 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 
 export default class CreateRoomPage extends Component {
-  defaultVotes = 2;
+    static defaultProps = {
+        votesToSkip: 2,
+        guestCanPause: true,
+        update: false,
+        roomCode: null,
+        updateCallback: () => {},
+    }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      guestCanPause: true,
-      votesToSkip: this.defaultVotes,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+          guestCanPause: this.props.guestCanPause,
+          votesToSkip: this.props.votesToSkip,
+        };
 
-    this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this);
-    this.handleVotesChange = this.handleVotesChange.bind(this);
-    this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
-  }
+        this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this);
+        this.handleVotesChange = this.handleVotesChange.bind(this);
+        this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
+    }
 
     handleVotesChange(e) {
         this.setState({
@@ -52,65 +58,95 @@ export default class CreateRoomPage extends Component {
             .then((data) => this.props.history.push("/room/" + data.code));
     }
 
-  render() {
-    return (
-        <Grid container spacing={1}>
+    renderCreateButtons() {
+        return (
+            <Grid container spacing={1}>
+                <Grid item xs={12} align="center">
+                    <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={this.handleRoomButtonPressed}
+                    >
+                        Create a room
+                    </Button>
+                </Grid>
+                <Grid item xs={12} align="center">
+                    <Button color="secondary"  variant="contained" to="/" component={ Link }>
+                        Back
+                    </Button>
+                </Grid>
+            </Grid>
+        );
+    }
+
+    renderUpdateButtons() {
+        return (
             <Grid item xs={12} align="center">
-                <Typography component="h4" variant="h4">
-                    Create a Room
-                </Typography>
-        </Grid>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={this.handleRoomButtonPressed}
+                >
+                    Update Room
+                </Button>
+            </Grid>
+        );
+    }
+
+    render() {
+        const title = this.props.update ? "Update Room" : "Create a Room";
+
+        return (
+            <Grid container spacing={1}>
+                <Grid item xs={12} align="center">
+                    <Typography component="h4" variant="h4">
+                        {title}
+                    </Typography>
+            </Grid>
+                <Grid item xs={12} align="center">
+                        <FormControl component="fieldset">
+                            <FormHelperText>
+                                <div align="center">Guest Control of Playback State</div>
+                        </FormHelperText>
+                    <RadioGroup row defaultValue="true" onChange={this.handleGuestCanPauseChange}>
+                        <FormControlLabel
+                            value="true"
+                                        control={<Radio color="primary" />}
+                                        label="Play/Pause"
+                                        labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="False"
+                                        control={<Radio color="secondary" />}
+                                        label="No Control"
+                                        labelPlacement="bottom"
+                        />
+                    </RadioGroup>
+                </FormControl>
+            </Grid>
             <Grid item xs={12} align="center">
-                    <FormControl component="fieldset">
-                        <FormHelperText>
-                            <div align="center">Guest Control of Playback State</div>
+                <FormControl>
+                    <TextField
+                            required={true}
+                            type="number"
+                            onChange={this.handleVotesChange}
+                            default={this.state.votesToSkip}
+                            inputProps={{
+                                min: 1,
+                                style: { textAlign: 'center' },
+                            }}
+                    />
+                    <FormHelperText>
+                        <div align="center">
+                            Votes required to skip song
+                        </div>
                     </FormHelperText>
-                <RadioGroup row defaultValue="true" onChange={this.handleGuestCanPauseChange}>
-                    <FormControlLabel
-                        value="true"
-                                    control={<Radio color="primary" />}
-                                    label="Play/Pause"
-                                    labelPlacement="bottom"
-                    />
-                    <FormControlLabel
-                        value="False"
-                                    control={<Radio color="secondary" />}
-                                    label="No Control"
-                                    labelPlacement="bottom"
-                    />
-                </RadioGroup>
-            </FormControl>
-        </Grid>
-        <Grid item xs={12} align="center">
-            <FormControl>
-                <TextField
-                        required={true}
-                        type="number"
-                        onChange={this.handleVotesChange}
-                        default={this.defaultVotes}
-                        inputProps={{
-                            min: 1,
-                            style: { textAlign: 'center' },
-                        }}
-                />
-                <FormHelperText>
-                    <div align="center">
-                        Votes required to skip song
-                    </div>
-                </FormHelperText>
-            </FormControl>
-            <Grid item xs={12} align="center">
-                <Button color="primary"  variant="contained" onClick={this.handleRoomButtonPressed}>
-                    Create a room
-                </Button>
+                </FormControl>
             </Grid>
-            <Grid item xs={12} align="center">
-                <Button color="secondary"  variant="contained" to="/" component={ Link }>
-                    Back
-                </Button>
+            {this.props.update
+            ? this.renderUpdateButtons()
+            : this.renderCreateButtons()}
             </Grid>
-        </Grid>
-        </Grid>
-    );
-  }
+        );
+    }
 }
