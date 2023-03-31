@@ -60,7 +60,9 @@ def refresh_spotify_token(session_id):
 
 def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     tokens = get_user_tokens(session_id)
-    headers = {'Content-Type': 'application/json', 'Authorization': "Bearer " + tokens.acess_token}
+    headers = {'Content-Type': 'application/json',
+               'Authorization': "Bearer " + tokens.access_token}
+
     if post_:
         post(BASE_URL + endpoint, headers=headers)
     if put_:
@@ -70,5 +72,5 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     try:
         return response.json()
     except:
-        return {"Error": "Issue with request"}
+        return {'Error': 'Issue with request'}
 
