@@ -4,6 +4,7 @@ import CreateRoomPage from "./CreateRoomPage";
 import { Grid, Button, ButtonGroup, Typography } from '@material-ui/core'
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import Room from "./Room";
+import Info from "./Info";
 
 
 export default class HomePage extends Component {
@@ -38,6 +39,9 @@ export default class HomePage extends Component {
                     <Button color="primary" component={Link} to="/join">
                         Join a Room
                     </Button>
+                    <Button color="default" component={Link} to="/info">
+                        Info
+                    </Button>
                     <Button color="secondary" component={Link} to="/create">
                         Create a Room
                     </Button>
@@ -68,6 +72,7 @@ export default class HomePage extends Component {
                 }}
                 />
                 <Route path='/join' component={RoomJoinPage} />
+                <Route path='/info' component={Info} />
                 <Route path='/create' component={CreateRoomPage} />
                 <Route
                     path='/room/:roomCode'
